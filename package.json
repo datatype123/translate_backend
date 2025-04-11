@@ -11,9 +11,16 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@langchain/core": "^0.3.44",
+    "@langchain/groq": "^0.2.2",
+    "@langchain/openai": "^0.5.5",
+    "@langchain/xai": "^0.0.2",
     "@supabase/supabase-js": "^2.49.4",
+    "axios": "^1.8.4",
+    "detectlanguage": "^2.1.0",
     "dotenv": "^16.4.7",
     "express": "^5.1.0",
-    "express-validator": "^7.2.1"
+    "express-validator": "^7.2.1",
+    "langchain": "^0.1.19"
   }
 }
