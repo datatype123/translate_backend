@@ -35,9 +35,8 @@ const langchain = async (text) => {
   return response;
 };
 
-const detectLanguageInput = async (input, start_index, end_index) => {
+const detectLanguage = async (input) => {
   try {
-    // Phát hiện ngôn ngữ
     const result = await detectlanguage.detect(input);
     console.log("Raw result:", result);
 
@@ -45,29 +44,36 @@ const detectLanguageInput = async (input, start_index, end_index) => {
       throw new Error("Không phát hiện được ngôn ngữ.");
     }
 
-    const sourceLanguage = result[0].language;
-    console.log("Detected language:", sourceLanguage);
-
-    // Dịch văn bản với Grok
-    const translatedText = await langchain(input);
-    console.log("Translated text:", translatedText);
-
-    // Lấy danh sách voices
-    const voices = await textToSpeech(start_index, end_index);
-    console.log("List voices:", voices);
-
-    return {
-      lang: sourceLanguage,
-      voices: voices,
-      translatedText: translatedText,
-    };
+    const detectedLang = result[0].language;
+    console.log("Detected language:", detectedLang);
+    return detectedLang;
   } catch (error) {
-    console.error("Error in detectLanguageInput:", error.message);
+    console.error("Error detecting language:", error.message);
     throw error;
   }
 };
 
-const textToSpeech = async (start_index, end_index) => {
+const translateText = async (input, start_index, end_index) => {
+  try {
+    const translatedText = await langchain(input);
+    console.log("Translated text:", translatedText);
+
+    const voices = await getListVoices(start_index, end_index);
+    console.log("List voices:", voices);
+
+    return {
+      translatedText,
+      voices,
+    };
+  } catch (error) {
+    console.error("Error in translate", error.message);
+    throw error;
+  }
+};
+
+
+
+const getListVoices = async (start_index, end_index) => {
   try {
     const speech = await axios({
       method: "GET",
@@ -88,4 +94,8 @@ const textToSpeech = async (start_index, end_index) => {
   }
 };
 
-module.exports = detectLanguageInput;
+module.exports = {
+  detectLanguage,
+  translateText,
+  getListVoices,
+};

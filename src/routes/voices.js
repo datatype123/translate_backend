@@ -1,20 +1,48 @@
 const express = require('express');
 const router = express.Router();
-const detect = require('../controllers/translate/VoiceText');
+const {translateText,detectLanguage} = require('../controllers/translate/VoiceText');
 
 
 //ROUTE: list voices avaiable from start index to end index to make the page not lag  
-router.post('/text-to-speech', async (req, res) => {
+router.post('/translate', async (req, res) => {
     try {
         const {input,start_page,end_page} = req.body;
-        const lang = await detect(input,start_page,end_page);
+        const lang = await translateText(input,start_page,end_page);
         res.status(200).json({
             lang
-        }
-        );
+        });
     } catch (error) {
         console.error(error);
         throw error;
+    }
+})
+
+
+router.post('/detect', async (req,res)=>{
+    try {
+        const input = req.body;
+        const lang = await detectLanguage(input);
+        res.status(200).json({
+            lang
+        })
+    } catch (error) {
+        console.error(error);
+        throw error;
+        
+    }
+})
+
+
+router.get('/voices',async (req,res)=>{
+    try {
+        const voices = await getListVoices();
+        res.status(200).json({
+            voices
+        })
+    } catch (error) {
+        console.error(error);
+        throw error;
+        
     }
 })
 
