@@ -22,15 +22,16 @@ const model = new ChatGroq({
 });
 
 // Tạo prompt template
-const prompt = ChatPromptTemplate.fromTemplate("translate from en to vn: {text}");
+const prompt = ChatPromptTemplate.fromTemplate("translate to {origin}: {text}");
 const outputParser = new StringOutputParser();
 
 // Hàm dịch văn bản với Grok
-const langchain = async (text) => {
+const langchain = async (text,origin) => {
   const chain = prompt.pipe(model).pipe(outputParser);
 
   const response = await chain.invoke({
     text: text,
+    origin:origin
   });
 
   console.log("Translated text:", response);
@@ -48,14 +49,14 @@ const detectLanguage = async (input) => {
     }
     return result;
   } catch (error) {
-    console.error("Error detecting language:", error);
+    console.error("Error detecting language:", error);  
     throw error;
   }
 };
 
-const translateText = async (input, start_index, end_index) => {
+const translateText = async (input,origin, start_index, end_index) => {
   try {
-    const translatedText = await langchain(input);
+    const translatedText = await langchain(input,origin);
     console.log("Translated text:", translatedText);
 
     const voices = await getListVoices(start_index, end_index);
