@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const {translateText,detectLanguage} = require('../controllers/translate/VoiceText');
+const {translateText,detectLanguage,getListVoices} = require('../controllers/translate/VoiceText');
 
 
 //ROUTE: list voices avaiable from start index to end index to make the page not lag  

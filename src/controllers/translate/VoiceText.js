@@ -14,6 +14,8 @@ const { StringOutputParser } = require("@langchain/core/output_parsers");
 
 // Khởi tạo các đối tượng
 const detectlanguage = new DetectLanguage(process.env.DETECTLANGUAGE_API_KEY);
+// console.log("API KEY:", process.env.DETECTLANGUAGE_API_KEY);
+
 const model = new ChatGroq({
   apiKey: process.env.GROQ_API_KEY,
   model: "llama-3.3-70b-versatile", // Tên model Grok, có thể cần kiểm tra tài liệu xAI
@@ -37,7 +39,8 @@ const langchain = async (text) => {
 
 const detectLanguage = async (input) => {
   try {
-    const result = await detectlanguage.detect(input);
+    console.log(input);
+    const result = await detectlanguage.detect(input.input);
     console.log("Raw result:", result);
 
     if (!result || result.length === 0) {
@@ -48,7 +51,7 @@ const detectLanguage = async (input) => {
     console.log("Detected language:", detectedLang);
     return detectedLang;
   } catch (error) {
-    console.error("Error detecting language:", error.message);
+    console.error("Error detecting language:", error);
     throw error;
   }
 };
