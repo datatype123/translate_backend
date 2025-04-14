@@ -46,10 +46,7 @@ const detectLanguage = async (input) => {
     if (!result || result.length === 0) {
       throw new Error("Không phát hiện được ngôn ngữ.");
     }
-
-    const detectedLang = result[0].language;
-    console.log("Detected language:", detectedLang);
-    return detectedLang;
+    return result;
   } catch (error) {
     console.error("Error detecting language:", error);
     throw error;
