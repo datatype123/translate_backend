@@ -6,8 +6,8 @@ const {translateText,detectLanguage,getListVoices} = require('../controllers/tra
 //ROUTE: list voices avaiable from start index to end index to make the page not lag  
 router.post('/translate', async (req, res) => {
     try {
-        const {input,origin,start_page,end_page} = req.body;
-        const lang = await translateText(input,origin,start_page,end_page);
+        const {input,origin,target,start_page,end_page} = req.body;
+        const lang = await translateText(input,origin,target,start_page,end_page);
         res.status(200).json({
             lang
         });

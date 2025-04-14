@@ -22,16 +22,17 @@ const model = new ChatGroq({
 });
 
 // Tạo prompt template
-const prompt = ChatPromptTemplate.fromTemplate("translate to {origin}: {text}");
+const prompt = ChatPromptTemplate.fromTemplate("translate from {origin} to {target}: {text}");
 const outputParser = new StringOutputParser();
 
 // Hàm dịch văn bản với Grok
-const langchain = async (text,origin) => {
+const langchain = async (text,target,origin) => {
   const chain = prompt.pipe(model).pipe(outputParser);
 
   const response = await chain.invoke({
     text: text,
-    origin:origin
+    origin:origin,
+    target:target
   });
 
   console.log("Translated text:", response);
@@ -54,9 +55,9 @@ const detectLanguage = async (input) => {
   }
 };
 
-const translateText = async (input,origin, start_index, end_index) => {
+const translateText = async (input,origin,target, start_index, end_index) => {
   try {
-    const translatedText = await langchain(input,origin);
+    const translatedText = await langchain(input,target,origin);
     console.log("Translated text:", translatedText);
 
     const voices = await getListVoices(start_index, end_index);
