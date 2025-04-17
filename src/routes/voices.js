@@ -13,7 +13,7 @@ router.post('/translate', async (req, res) => {
         });
     } catch (error) {
         console.error(error);
-        throw error;
+        res.status(500).json({ error: error.message || 'Something went wrong' });
     }
 })
 

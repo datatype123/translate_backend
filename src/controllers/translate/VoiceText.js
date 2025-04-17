@@ -12,32 +12,63 @@ const { StringOutputParser } = require("@langchain/core/output_parsers");
  * chu khong dua text ra han giong nhu dang API stream
  */
 
-// Khởi tạo các đối tượng
+//detect language 
 const detectlanguage = new DetectLanguage(process.env.DETECTLANGUAGE_API_KEY);
-// console.log("API KEY:", process.env.DETECTLANGUAGE_API_KEY);
 
-const model = new ChatGroq({
+// Khởi tạo mô hình Groq
+const chatModel = new ChatGroq({
   apiKey: process.env.GROQ_API_KEY,
-  model: "llama-3.3-70b-versatile", // Tên model Grok, có thể cần kiểm tra tài liệu xAI
+  model: "llama-3-3-70b-versatile", // Đảm bảo tên model chính xác
 });
 
-// Tạo prompt template
-const prompt = ChatPromptTemplate.fromTemplate("translate from {origin} to {target}: {text}");
+// Tạo prompt template mới
+const promptTemplate = ChatPromptTemplate.fromTemplate(`
+You are a professional translator.
+Translate the following text from {origin} to {target}.
+Only return the translated result — no explanations, no extra formatting.
+
+Text:
+{text}
+`);
+
+// Khởi tạo output parser
 const outputParser = new StringOutputParser();
 
-// Hàm dịch văn bản với Grok
-const langchain = async (text,target,origin) => {
-  const chain = prompt.pipe(model).pipe(outputParser);
+// Hàm thực hiện dịch
+const langchain = async (text, target, origin) => {
+  try {
+    // Kiểm tra dữ liệu đầu vào
+    if (!text || !origin || !target) {
+      throw new Error("Missing required input: text, origin, or target");
+    }
 
-  const response = await chain.invoke({
-    text: text,
-    origin:origin,
-    target:target
-  });
+    // Format prompt
+    const formattedPrompt = await promptTemplate.format({
+      text,
+      origin,
+      target,
+    });
+    console.log("🧠 Formatted Prompt:\n", formattedPrompt);
 
-  console.log("Translated text:", response);
-  return response;
+    // Tạo pipeline: prompt → model → parser
+    const chain = promptTemplate.pipe(chatModel).pipe(outputParser);
+
+    // Invoke chain
+    const result = await chain.invoke({
+      text,
+      origin,
+      target,
+    });
+
+    console.log("✅ Translated Result:", result);
+    return result;
+
+  } catch (err) {
+    console.error("❌ Error in langchain():", err.message);
+    throw err;
+  }
 };
+
 
 const detectLanguage = async (input) => {
   try {
