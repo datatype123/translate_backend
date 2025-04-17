@@ -12,13 +12,13 @@ const { StringOutputParser } = require("@langchain/core/output_parsers");
  * chu khong dua text ra han giong nhu dang API stream
  */
 
-//detect language 
+// Khởi tạo các đối tượng
 const detectlanguage = new DetectLanguage(process.env.DETECTLANGUAGE_API_KEY);
+// console.log("API KEY:", process.env.DETECTLANGUAGE_API_KEY);
 
-// Khởi tạo mô hình Groq
 const chatModel = new ChatGroq({
   apiKey: process.env.GROQ_API_KEY,
-  model: "llama-3-3-70b-versatile", // Đảm bảo tên model chính xác
+  model: "llama-3.3-70b-versatile", // Đảm bảo tên model chính xác
 });
 
 // Tạo prompt template mới
@@ -35,7 +35,7 @@ Text:
 const outputParser = new StringOutputParser();
 
 // Hàm thực hiện dịch
-const langchain = async (text, target, origin) => {
+export const langchain = async (text, target, origin) => {
   try {
     // Kiểm tra dữ liệu đầu vào
     if (!text || !origin || !target) {
@@ -68,7 +68,6 @@ const langchain = async (text, target, origin) => {
     throw err;
   }
 };
-
 
 const detectLanguage = async (input) => {
   try {
