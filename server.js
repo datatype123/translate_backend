@@ -15,6 +15,10 @@ app.use('',userRouter);
 
 app.use('/api/v1',voiceRouter);
 
-app.listen(PORT, '0.0.0.0', () => {
-    console.log(`Server is listening on port ${PORT}`);
-});
+
+//NOTE: chi dung khi chạy local, deploy len vercel thi khong can nua
+
+
+// app.listen(PORT, '0.0.0.0', () => {
+//     console.log(`Server is listening on port ${PORT}`);
+// });

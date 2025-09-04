@@ -21,6 +21,8 @@ const chatModel = new ChatGroq({
   model: "llama-3.3-70b-versatile", // Đảm bảo tên model chính xác
 });
 
+console.log("GROQ API KEY:", process.env.GROQ_API_KEY);
+
 // Tạo prompt template mới
 const promptTemplate = ChatPromptTemplate.fromTemplate(`
 You are a professional translator.
@@ -90,12 +92,12 @@ const translateText = async (input,origin,target, start_index, end_index) => {
     const translatedText = await langchain(input,target,origin);
     console.log("Translated text:", translatedText);
 
-    const voices = await getListVoices(start_index, end_index);
-    console.log("List voices:", voices);
+    // const voices = await getListVoices(start_index, end_index);
+    // console.log("List voices:", voices);
 
     return {
       translatedText,
-      voices,
+      // voices,
     };
   } catch (error) {
     console.error("Error in translate", error.message);
